@@ -1,49 +1,49 @@
 using System;
 
-// Клас півплощина
 public class HalfPlane
 {
-    protected double a, b, c;
+    private double _a1, _a2, _b;
+    public double A1 => _a1;
+    public double A2 => _a2;
+    public double B => _b;
 
-    public void SetCoefficients(double a, double b, double c)
+    public HalfPlane(double a1, double a2, double b)
     {
-        this.a = a;
-        this.b = b;
-        this.c = c;
+        _a1 = a1;
+        _a2 = a2;
+        _b = b;
     }
 
     public void PrintCoefficients()
     {
-        Console.WriteLine($"HalfPlane coefficients: a={a}, b={b}, c={c}");
+        Console.WriteLine($"Коефіцієнти півплощини: a1={_a1}, a2={_a2}, b={_b}");
     }
 
     public bool ContainsPoint(double x1, double x2)
     {
-        return a * x1 + b * x2 + c >= 0;
+        return _a1 * x1 + _a2 * x2 + 0 <= _b;
     }
 }
 
-// Похідний клас півпростір
+// Похідний клас "півпростір"
 public class HalfSpace : HalfPlane
 {
-    private double d;
+    private double _a3;
+    public double A3 => _a3;
 
-    public void SetCoefficients(double a, double b, double c, double d)
+    public HalfSpace(double a1, double a2, double a3, double b) : base(a1, a2, b)
     {
-        this.a = a;
-        this.b = b;
-        this.c = c;
-        this.d = d;
+        _a3 = a3;
     }
 
     public new void PrintCoefficients()
     {
-        Console.WriteLine($"HalfSpace coefficients: a={a}, b={b}, c={c}, d={d}");
+        Console.WriteLine($"Коефіцієнти півпростору: a1={A1}, a2={A2}, a3={_a3}, b={B}");
     }
 
     public bool ContainsPoint(double x1, double x2, double x3)
     {
-        return a * x1 + b * x2 + c * x3 + d >= 0;
+        return A1 * x1 + A2 * x2 + _a3 * x3 <= B;
     }
 }
 
@@ -52,10 +52,9 @@ class Program
     static void Main()
     {
         // Півплощина
-        var halfPlane = new HalfPlane();
-        Console.WriteLine("Введіть коефіцієнти для півплощини (a b c):");
+        Console.WriteLine("Введіть коефіцієнти для півплощини (a1 a2 b):");
         var hpCoeffs = Console.ReadLine().Split();
-        halfPlane.SetCoefficients(
+        var halfPlane = new HalfPlane(
             double.Parse(hpCoeffs[0]),
             double.Parse(hpCoeffs[1]),
             double.Parse(hpCoeffs[2])
@@ -70,10 +69,9 @@ class Program
         Console.WriteLine(hpResult ? "Точка належить півплощині" : "Точка не належить півплощині");
 
         // Півпростір
-        var halfSpace = new HalfSpace();
-        Console.WriteLine("Введіть коефіцієнти для півпростору (a b c d):");
+        Console.WriteLine("Введіть коефіцієнти для півпростору (a1 a2 a3 b):");
         var hsCoeffs = Console.ReadLine().Split();
-        halfSpace.SetCoefficients(
+        var halfSpace = new HalfSpace(
             double.Parse(hsCoeffs[0]),
             double.Parse(hsCoeffs[1]),
             double.Parse(hsCoeffs[2]),
