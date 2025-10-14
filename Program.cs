@@ -23,7 +23,7 @@ public class HalfPlane
     {
         return _a1 * x1 + _a2 * x2 + 0 <= _b;
     }
-}
+} 
 
 // Похідний клас "півпростір"
 public class HalfSpace : HalfPlane
