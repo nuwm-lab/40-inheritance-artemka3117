@@ -1,6 +1,6 @@
 using System;
 
-class HalfPlane
+class main
 {
     protected double a, b, c;
 
