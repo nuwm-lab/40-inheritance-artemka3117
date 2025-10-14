@@ -1,7 +1,7 @@
 using System;
 
 class HalfPlane
-{
+{ 
     protected double a, b, c;
 
     public void SetCoefficients(double a, double b, double c)
