@@ -14,15 +14,23 @@ public class HalfPlane
         _b = b;
     }
 
-    public void PrintCoefficients()
+    /// <summary>
+    /// Виводить коефіцієнти півплощини
+    /// </summary>
+    public virtual void PrintCoefficients()
     {
         Console.WriteLine($"Коефіцієнти півплощини: a1={_a1}, a2={_a2}, b={_b}");
     }
 
-    public bool ContainsPoint(double x1, double x2)
+    /// <summary>
+    /// Перевіряє, чи належить точка півплощині
+    /// </summary>
+    public virtual bool ContainsPoint(double x1, double x2)
     {
-        return _a1 * x1 + _a2 * x2 + 0 <= _b;
+        return _a1 * x1 + _a2 * x2 <= _b;
     }
+
+    public override string ToString() => $"HalfPlane: a1={_a1}, a2={_a2}, b={_b}";
 }
 
 // Похідний клас "півпростір"
@@ -36,55 +44,75 @@ public class HalfSpace : HalfPlane
         _a3 = a3;
     }
 
-    public new void PrintCoefficients()
+    /// <summary>
+    /// Виводить коефіцієнти півпростору
+    /// </summary>
+    public override void PrintCoefficients()
     {
         Console.WriteLine($"Коефіцієнти півпростору: a1={A1}, a2={A2}, a3={_a3}, b={B}");
     }
 
+    /// <summary>
+    /// Перевіряє, чи належить точка півпростору
+    /// </summary>
     public bool ContainsPoint(double x1, double x2, double x3)
     {
         return A1 * x1 + A2 * x2 + _a3 * x3 <= B;
     }
+
+    public override string ToString() => $"HalfSpace: a1={A1}, a2={A2}, a3={_a3}, b={B}";
 }
 
 class Program
 {
+    static double[] ReadDoubles(string prompt, int count)
+    {
+        while (true)
+        {
+            Console.WriteLine(prompt);
+            var input = Console.ReadLine();
+            if (input == null)
+            {
+                Console.WriteLine("Ввід перервано.");
+                return null;
+            }
+            var arr = input.Split();
+            if (arr.Length != count)
+            {
+                Console.WriteLine($"Помилка: потрібно {count} чисел.");
+                continue;
+            }
+            var result = new double[count];
+            bool ok = true;
+            for (int i = 0; i < count; i++)
+                ok &= double.TryParse(arr[i], out result[i]);
+            if (ok) return result;
+            Console.WriteLine("Помилка: некоректний ввід.");
+        }
+    }
+
     static void Main()
     {
         // Півплощина
-        Console.WriteLine("Введіть коефіцієнти для півплощини (a1 a2 b):");
-        var hpCoeffs = Console.ReadLine().Split();
-        var halfPlane = new HalfPlane(
-            double.Parse(hpCoeffs[0]),
-            double.Parse(hpCoeffs[1]),
-            double.Parse(hpCoeffs[2])
-        );
+        var hpCoeffs = ReadDoubles("Введіть коефіцієнти для півплощини (a1 a2 b):", 3);
+        if (hpCoeffs == null) return;
+        var halfPlane = new HalfPlane(hpCoeffs[0], hpCoeffs[1], hpCoeffs[2]);
         halfPlane.PrintCoefficients();
-        Console.WriteLine("Введіть точку для перевірки (x1 x2):");
-        var hpPoint = Console.ReadLine().Split();
-        bool hpResult = halfPlane.ContainsPoint(
-            double.Parse(hpPoint[0]),
-            double.Parse(hpPoint[1])
-        );
+        Console.WriteLine(halfPlane);
+        var hpPoint = ReadDoubles("Введіть точку для перевірки (x1 x2):", 2);
+        if (hpPoint == null) return;
+        bool hpResult = halfPlane.ContainsPoint(hpPoint[0], hpPoint[1]);
         Console.WriteLine(hpResult ? "Точка належить півплощині" : "Точка не належить півплощині");
 
         // Півпростір
-        Console.WriteLine("Введіть коефіцієнти для півпростору (a1 a2 a3 b):");
-        var hsCoeffs = Console.ReadLine().Split();
-        var halfSpace = new HalfSpace(
-            double.Parse(hsCoeffs[0]),
-            double.Parse(hsCoeffs[1]),
-            double.Parse(hsCoeffs[2]),
-            double.Parse(hsCoeffs[3])
-        );
+        var hsCoeffs = ReadDoubles("Введіть коефіцієнти для півпростору (a1 a2 a3 b):", 4);
+        if (hsCoeffs == null) return;
+        var halfSpace = new HalfSpace(hsCoeffs[0], hsCoeffs[1], hsCoeffs[2], hsCoeffs[3]);
         halfSpace.PrintCoefficients();
-        Console.WriteLine("Введіть точку для перевірки (x1 x2 x3):");
-        var hsPoint = Console.ReadLine().Split();
-        bool hsResult = halfSpace.ContainsPoint(
-            double.Parse(hsPoint[0]),
-            double.Parse(hsPoint[1]),
-            double.Parse(hsPoint[2])
-        );
+        Console.WriteLine(halfSpace);
+        var hsPoint = ReadDoubles("Введіть точку для перевірки (x1 x2 x3):", 3);
+        if (hsPoint == null) return;
+        bool hsResult = halfSpace.ContainsPoint(hsPoint[0], hsPoint[1], hsPoint[2]);
         Console.WriteLine(hsResult ? "Точка належить півпростору" : "Точка не належить півпростору");
     }
 }
